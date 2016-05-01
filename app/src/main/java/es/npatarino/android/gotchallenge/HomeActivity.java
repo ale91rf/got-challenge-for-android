@@ -35,6 +35,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import es.npatarino.android.gotchallenge.model.GoTCharacter;
+import es.npatarino.android.gotchallenge.model.GoTHouse;
+
 public class HomeActivity extends AppCompatActivity {
 
     SectionsPagerAdapter spa;
@@ -175,20 +178,20 @@ public class HomeActivity extends AppCompatActivity {
                         GoTHousesListFragment.this.getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ArrayList<GoTCharacter.GoTHouse> hs = new ArrayList<GoTCharacter.GoTHouse>();
+                                ArrayList<GoTHouse> hs = new ArrayList<GoTHouse>();
                                 for (int i = 0; i < characters.size(); i++) {
                                     boolean b = false;
                                     for (int j = 0; j < hs.size(); j++) {
-                                        if (hs.get(j).n.equalsIgnoreCase(characters.get(i).hn)) {
+                                        if (hs.get(j).mHouseName.equalsIgnoreCase(characters.get(i).mHouseName)) {
                                             b = true;
                                         }
                                     }
                                     if (!b) {
-                                        if (characters.get(i).hi != null && !characters.get(i).hi.isEmpty()) {
-                                            GoTCharacter.GoTHouse h = new GoTCharacter.GoTHouse();
-                                            h.i = characters.get(i).hi;
-                                            h.n = characters.get(i).hn;
-                                            h.u = characters.get(i).hu;
+                                        if (characters.get(i).mHouseId != null && !characters.get(i).mHouseId.isEmpty()) {
+                                            GoTHouse h = new GoTHouse();
+                                            h.mHouseId = characters.get(i).mHouseId;
+                                            h.mHouseName = characters.get(i).mHouseName;
+                                            h.mHouseImageUrl = characters.get(i).mHouseImageUrl;
                                             hs.add(h);
                                             b = false;
                                         }
@@ -269,9 +272,9 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(final View v) {
                     Intent intent = new Intent(((GotCharacterViewHolder) holder).itemView.getContext(), DetailActivity.class);
-                    intent.putExtra("description", gcs.get(position).d);
-                    intent.putExtra("name", gcs.get(position).n);
-                    intent.putExtra("imageUrl", gcs.get(position).iu);
+                    intent.putExtra("description", gcs.get(position).mDescription);
+                    intent.putExtra("name", gcs.get(position).mName);
+                    intent.putExtra("imageUrl", gcs.get(position).mImageUrl);
                     ((GotCharacterViewHolder) holder).itemView.getContext().startActivity(intent);
                 }
             });
@@ -300,13 +303,13 @@ public class HomeActivity extends AppCompatActivity {
                     public void run() {
                         URL url = null;
                         try {
-                            url = new URL(goTCharacter.iu);
+                            url = new URL(goTCharacter.mImageUrl);
                             final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                             a.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     imp.setImageBitmap(bmp);
-                                    tvn.setText(goTCharacter.n);
+                                    tvn.setText(goTCharacter.mName);
                                 }
                             });
                         } catch (IOException e) {
@@ -321,7 +324,7 @@ public class HomeActivity extends AppCompatActivity {
 
     static class GoTHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private final List<GoTCharacter.GoTHouse> gcs;
+        private final List<GoTHouse> gcs;
         private Activity a;
 
         public GoTHouseAdapter(Activity activity) {
@@ -329,9 +332,9 @@ public class HomeActivity extends AppCompatActivity {
             a = activity;
         }
 
-        void addAll(Collection<GoTCharacter.GoTHouse> collection) {
+        void addAll(Collection<GoTHouse> collection) {
             for (int i = 0; i < collection.size(); i++) {
-                gcs.add((GoTCharacter.GoTHouse) collection.toArray()[i]);
+                gcs.add((GoTHouse) collection.toArray()[i]);
             }
         }
 
@@ -361,13 +364,13 @@ public class HomeActivity extends AppCompatActivity {
                 imp = (ImageView) itemView.findViewById(R.id.ivBackground);
             }
 
-            public void render(final GoTCharacter.GoTHouse goTHouse) {
+            public void render(final GoTHouse goTHouse) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         URL url = null;
                         try {
-                            url = new URL(goTHouse.u);
+                            url = new URL(goTHouse.mHouseImageUrl);
                             final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                             a.runOnUiThread(new Runnable() {
                                 @Override
