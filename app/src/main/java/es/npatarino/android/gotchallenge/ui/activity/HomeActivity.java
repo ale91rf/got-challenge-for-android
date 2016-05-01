@@ -6,46 +6,52 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
 import es.npatarino.android.gotchallenge.ui.adapter.SectionsPagerAdapter;
 
 public class HomeActivity extends AppCompatActivity {
 
-    SectionsPagerAdapter spa;
-    ViewPager vp;
-    Toolbar toolbar;
-    TabLayout tabLayout;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    @Bind(R.id.container)
+    ViewPager mViewPager;
+
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
+
+    @Bind(R.id.tabs)
+    TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        ButterKnife.bind(this);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        setSpa(new SectionsPagerAdapter(getSupportFragmentManager()));
+        setSupportActionBar(mToolbar);
+        setSectionsPagerAdapter(new SectionsPagerAdapter(getSupportFragmentManager()));
 
-        setVp((ViewPager) findViewById(R.id.container));
-        getVp().setAdapter(getSpa());
+        getViewPager().setAdapter(getSectionsPagerAdapter());
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(getVp());
+        mTabLayout.setupWithViewPager(getViewPager());
     }
 
-    public SectionsPagerAdapter getSpa() {
-        return spa;
+    public SectionsPagerAdapter getSectionsPagerAdapter() {
+        return mSectionsPagerAdapter;
     }
 
-    public void setSpa(SectionsPagerAdapter spa) {
-        this.spa = spa;
+    public void setSectionsPagerAdapter(SectionsPagerAdapter aSectionsPagerAdapter) {
+        this.mSectionsPagerAdapter = aSectionsPagerAdapter;
     }
 
-    public ViewPager getVp() {
-        return vp;
+    public ViewPager getViewPager() {
+        return mViewPager;
     }
 
-    public void setVp(ViewPager vp) {
-        this.vp = vp;
+    public void setViewPager(ViewPager aViewPager) {
+        this.mViewPager = aViewPager;
     }
 
 

@@ -3,6 +3,7 @@ package es.npatarino.android.gotchallenge.ui.adapter;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
 import es.npatarino.android.gotchallenge.model.GoTHouse;
 
@@ -57,11 +60,13 @@ public class GoTHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     class GotCharacterViewHolder extends RecyclerView.ViewHolder {
 
         private static final String TAG = "GotCharacterViewHolder";
-        ImageView imp;
 
-        public GotCharacterViewHolder(View itemView) {
-            super(itemView);
-            imp = (ImageView) itemView.findViewById(R.id.ivBackground);
+        @Nullable @Bind(R.id.ivBackground)
+        ImageView mImageView;
+
+        public GotCharacterViewHolder(View aView) {
+            super(aView);
+            ButterKnife.bind(this, aView);
         }
 
         public void render(final GoTHouse goTHouse) {
@@ -75,7 +80,7 @@ public class GoTHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         a.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                imp.setImageBitmap(bmp);
+                                mImageView.setImageBitmap(bmp);
                             }
                         });
                     } catch (IOException e) {

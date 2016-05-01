@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +19,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.ui.activity.DetailActivity;
+import es.npatarino.android.gotchallenge.util.Constants;
 
 /**
  * Created by alejandro on 1/5/16.
@@ -50,13 +54,13 @@ public class GoTAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         GotCharacterViewHolder gotCharacterViewHolder = (GotCharacterViewHolder) holder;
         gotCharacterViewHolder.render(gcs.get(position));
-        ((GotCharacterViewHolder) holder).imp.setOnClickListener(new View.OnClickListener() {
+        ((GotCharacterViewHolder) holder).mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 Intent intent = new Intent(((GotCharacterViewHolder) holder).itemView.getContext(), DetailActivity.class);
-                intent.putExtra("description", gcs.get(position).mDescription);
-                intent.putExtra("name", gcs.get(position).mName);
-                intent.putExtra("imageUrl", gcs.get(position).mImageUrl);
+                intent.putExtra(Constants.DESCRIPTION, gcs.get(position).mDescription);
+                intent.putExtra(Constants.NAME, gcs.get(position).mName);
+                intent.putExtra(Constants.IMAGE_URL, gcs.get(position).mImageUrl);
                 ((GotCharacterViewHolder) holder).itemView.getContext().startActivity(intent);
             }
         });
@@ -70,13 +74,17 @@ public class GoTAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class GotCharacterViewHolder extends RecyclerView.ViewHolder {
 
         private static final String TAG = "GotCharacterViewHolder";
-        ImageView imp;
-        TextView tvn;
 
-        public GotCharacterViewHolder(View itemView) {
-            super(itemView);
-            imp = (ImageView) itemView.findViewById(R.id.ivBackground);
-            tvn = (TextView) itemView.findViewById(R.id.tv_name);
+        @Nullable @Bind(R.id.ivBackground)
+        ImageView mImageView;
+
+        @Nullable @Bind(R.id.tv_name)
+        TextView mLblName;
+
+        public GotCharacterViewHolder(View aView) {
+            super(aView);
+            ButterKnife.bind(this,aView);
+
         }
 
         public void render(final GoTCharacter goTCharacter) {
@@ -90,8 +98,8 @@ public class GoTAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         a.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                imp.setImageBitmap(bmp);
-                                tvn.setText(goTCharacter.mName);
+                                mImageView.setImageBitmap(bmp);
+                                mLblName.setText(goTCharacter.mName);
                             }
                         });
                     } catch (IOException e) {

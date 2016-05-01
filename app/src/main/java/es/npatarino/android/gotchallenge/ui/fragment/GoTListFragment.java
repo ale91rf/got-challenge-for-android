@@ -22,6 +22,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.ui.adapter.GoTAdapter;
@@ -33,19 +35,29 @@ public class GoTListFragment extends Fragment {
 
     private static final String TAG = "GoTListFragment";
 
+    @Bind(R.id.pb)
+    ContentLoadingProgressBar mProgress;
+
+    @Bind(R.id.rv)
+    RecyclerView mRecyclerView;
+
+    private GoTAdapter mGoTAdapter;
+
     public GoTListFragment() {
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
-        final ContentLoadingProgressBar pb = (ContentLoadingProgressBar) rootView.findViewById(R.id.pb);
-        RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv);
+        View mRootView = inflater.inflate(R.layout.fragment_list, container, false);
 
-        final GoTAdapter adp = new GoTAdapter(getActivity());
-        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rv.setHasFixedSize(true);
-        rv.setAdapter(adp);
+        ButterKnife.bind(this, mRootView);
+
+
+        mGoTAdapter = new GoTAdapter(getActivity());
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mGoTAdapter);
 
         new Thread(new Runnable() {
 
@@ -72,9 +84,9 @@ public class GoTListFragment extends Fragment {
                     GoTListFragment.this.getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            adp.addAll(characters);
-                            adp.notifyDataSetChanged();
-                            pb.hide();
+                            mGoTAdapter.addAll(characters);
+                            mGoTAdapter.notifyDataSetChanged();
+                            mProgress.hide();
                         }
                     });
                 } catch (IOException e) {
@@ -84,6 +96,6 @@ public class GoTListFragment extends Fragment {
 
             }
         }).start();
-        return rootView;
+        return mRootView;
     }
 }

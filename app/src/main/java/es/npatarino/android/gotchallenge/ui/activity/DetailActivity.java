@@ -12,29 +12,43 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.net.URL;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
+import es.npatarino.android.gotchallenge.util.Constants;
 
 public class DetailActivity extends AppCompatActivity {
 
 
     private static final String TAG = "DetailActivity";
 
+    @Bind(R.id.iv_photo)
+    ImageView mImage;
+
+    @Bind(R.id.tv_name)
+    TextView mLblName;
+
+    @Bind(R.id.tv_description)
+    TextView mLblDescription;
+
+    @Bind(R.id.t)
+    Toolbar mToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        final ImageView ivp = (ImageView) findViewById(R.id.iv_photo);
-        final TextView tvn = (TextView) findViewById(R.id.tv_name);
-        final TextView tvd = (TextView) findViewById(R.id.tv_description);
+        ButterKnife.bind(this);
 
-        final String d = getIntent().getStringExtra("description");
-        final String n = getIntent().getStringExtra("name");
-        final String i = getIntent().getStringExtra("imageUrl");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.t);
-        toolbar.setTitle(n);
-        setSupportActionBar(toolbar);
+        final String mDescription = getIntent().getStringExtra(Constants.DESCRIPTION);
+        final String mName = getIntent().getStringExtra(Constants.NAME);
+        final String mImageUrl = getIntent().getStringExtra(Constants.IMAGE_URL);
+
+        mToolbar.setTitle(mName);
+        setSupportActionBar(mToolbar);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -44,14 +58,14 @@ public class DetailActivity extends AppCompatActivity {
             public void run() {
                 URL url = null;
                 try {
-                    url = new URL(i);
+                    url = new URL(mImageUrl);
                     final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     DetailActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ivp.setImageBitmap(bmp);
-                            tvn.setText(n);
-                            tvd.setText(d);
+                            mImage.setImageBitmap(bmp);
+                            mLblName.setText(mName);
+                            mLblDescription.setText(mDescription);
                         }
                     });
                 } catch (IOException e) {

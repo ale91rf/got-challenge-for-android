@@ -22,6 +22,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.model.GoTHouse;
@@ -34,19 +36,27 @@ public class GoTHousesListFragment extends Fragment {
 
     private static final String TAG = "GoTHousesListFragment";
 
+    @Bind(R.id.pb)
+    ContentLoadingProgressBar mProgress;
+
+    @Bind(R.id.rv)
+    RecyclerView mRecyclerView;
+
+    private GoTHouseAdapter mGoTHouseAdapter;
+
     public GoTHousesListFragment() {
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
-        final ContentLoadingProgressBar pb = (ContentLoadingProgressBar) rootView.findViewById(R.id.pb);
-        RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv);
+        View mRootView = inflater.inflate(R.layout.fragment_list, container, false);
 
-        final GoTHouseAdapter adp = new GoTHouseAdapter(getActivity());
-        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rv.setHasFixedSize(true);
-        rv.setAdapter(adp);
+        ButterKnife.bind(this, mRootView);
+
+        mGoTHouseAdapter = new GoTHouseAdapter(getActivity());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mGoTHouseAdapter);
 
         new Thread(new Runnable() {
 
@@ -91,9 +101,9 @@ public class GoTHousesListFragment extends Fragment {
                                     }
                                 }
                             }
-                            adp.addAll(hs);
-                            adp.notifyDataSetChanged();
-                            pb.hide();
+                            mGoTHouseAdapter.addAll(hs);
+                            mGoTHouseAdapter.notifyDataSetChanged();
+                            mProgress.hide();
                         }
                     });
                 } catch (IOException e) {
@@ -101,6 +111,6 @@ public class GoTHousesListFragment extends Fragment {
                 }
             }
         }).start();
-        return rootView;
+        return mRootView;
     }
 }
