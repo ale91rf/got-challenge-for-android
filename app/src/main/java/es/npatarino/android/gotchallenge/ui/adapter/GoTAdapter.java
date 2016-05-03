@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,51 +31,53 @@ import es.npatarino.android.gotchallenge.util.Constants;
 /**
  * Created by alejandro on 1/5/16.
  */
-public class GoTAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GoTAdapter extends RecyclerView.Adapter<GoTAdapter.GotCharacterViewHolder> {
 
-    private final List<GoTCharacter> gcs;
-    private Activity a;
+    private List<GoTCharacter> mCharacterList;
+    private Activity mActivity;
 
-    public GoTAdapter(Activity activity) {
-        this.gcs = new ArrayList<>();
-        a = activity;
+    public GoTAdapter(Activity aActivity) {
+        this.mCharacterList = new ArrayList<>();
+        mActivity = aActivity;
     }
 
     public void addAll(Collection<GoTCharacter> collection) {
         for (int i = 0; i < collection.size(); i++) {
-            gcs.add((GoTCharacter) collection.toArray()[i]);
+            mCharacterList.add((GoTCharacter) collection.toArray()[i]);
         }
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GotCharacterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new GotCharacterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.got_character_row, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        GotCharacterViewHolder gotCharacterViewHolder = (GotCharacterViewHolder) holder;
-        gotCharacterViewHolder.render(gcs.get(position));
-        ((GotCharacterViewHolder) holder).mImageView.setOnClickListener(new View.OnClickListener() {
+    public void onBindViewHolder(GotCharacterViewHolder aHolder, int aPosition) {
+
+        aHolder.render(mCharacterList.get(aPosition));
+        aHolder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View v) {
-                Intent intent = new Intent(((GotCharacterViewHolder) holder).itemView.getContext(), DetailActivity.class);
-                intent.putExtra(Constants.DESCRIPTION, gcs.get(position).getDescription());
-                intent.putExtra(Constants.NAME, gcs.get(position).getName());
-                intent.putExtra(Constants.IMAGE_URL, gcs.get(position).getImageUrl());
-                ((GotCharacterViewHolder) holder).itemView.getContext().startActivity(intent);
+            public void onClick(View v) {
+                Intent lIntent = new Intent(mActivity, DetailActivity.class);
+                lIntent.putExtra(Constants.DESCRIPTION, mCharacterList.get(aPosition).getDescription());
+                lIntent.putExtra(Constants.NAME, mCharacterList.get(aPosition).getName());
+                lIntent.putExtra(Constants.IMAGE_URL, mCharacterList.get(aPosition).getImageUrl());
+                mActivity.startActivity(lIntent);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return gcs.size();
+        return mCharacterList.size();
     }
+
 
     public class GotCharacterViewHolder extends RecyclerView.ViewHolder {
 
         private static final String TAG = "GotCharacterViewHolder";
+
 
         @Nullable @Bind(R.id.ivBackground)
         ImageView mImageView;
@@ -87,26 +91,11 @@ public class GoTAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         }
 
-        public void render(final GoTCharacter goTCharacter) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    URL url = null;
-                    try {
-                        url = new URL(goTCharacter.getImageUrl());
-                        final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                        a.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mImageView.setImageBitmap(bmp);
-                                mLblName.setText(goTCharacter.getName());
-                            }
-                        });
-                    } catch (IOException e) {
-                        Log.e(TAG, e.getLocalizedMessage());
-                    }
-                }
-            }).start();
+        public void render(GoTCharacter aGoTCharacter) {
+
+            Picasso.with(mImageView.getContext()).load(aGoTCharacter.getImageUrl()).into(mImageView);
+            mLblName.setText(aGoTCharacter.getName());
+
         }
     }
 
