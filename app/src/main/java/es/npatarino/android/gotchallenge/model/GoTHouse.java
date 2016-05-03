@@ -9,11 +9,19 @@ import com.google.gson.annotations.SerializedName;
 public class GoTHouse {
 
     @SerializedName("houseImageUrl")
-    public String mHouseImageUrl;
+    private String mHouseImageUrl;
     @SerializedName("houseName")
-    public String mHouseName;
+    private String mHouseName;
     @SerializedName("houseId")
-    public String mHouseId;
+    private String mHouseId;
+
+    public GoTHouse(){}
+
+    public GoTHouse(String aHouseImageUrl, String aHouseName, String aHouseId) {
+        this.mHouseImageUrl = aHouseImageUrl;
+        this.mHouseName = aHouseName;
+        this.mHouseId = aHouseId;
+    }
 
     public String getHouseImageUrl() {
         return mHouseImageUrl;

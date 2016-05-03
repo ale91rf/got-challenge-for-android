@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
@@ -18,9 +19,22 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+    }
+}
+// Required because retrolambda is on maven central
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -31,4 +45,32 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.jakewharton:butterknife:7.0.1'
 
+
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
+
+    compile 'com.squareup.okhttp3:logging-interceptor:3.1.2'
+
+    // RxJava adapter for retrofit
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3'
+
+    // RxJava libraries
+    compile 'io.reactivex:rxjava:1.0.10'
+    compile 'io.reactivex:rxandroid:1.1.0'
+
+}
+
+String getJavaHome(String version)
+{
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine "/usr/libexec/java_home", "-v", version
+        standardOutput = stdout;
+    }
+    return stdout.toString().trim()
+}
+
+retrolambda {
+    jdk System.getenv("JAVA8_HOME") ?: getJavaHome("1.8")
+    oldJdk System.getenv("JAVA7_HOME") ?: getJavaHome("1.7")
 }

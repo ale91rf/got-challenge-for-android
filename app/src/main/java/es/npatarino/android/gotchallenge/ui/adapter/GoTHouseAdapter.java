@@ -75,7 +75,7 @@ public class GoTHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 public void run() {
                     URL url = null;
                     try {
-                        url = new URL(goTHouse.mHouseImageUrl);
+                        url = new URL(goTHouse.getHouseImageUrl());
                         final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                         a.runOnUiThread(new Runnable() {
                             @Override

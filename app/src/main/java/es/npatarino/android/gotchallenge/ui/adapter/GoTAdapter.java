@@ -58,9 +58,9 @@ public class GoTAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(final View v) {
                 Intent intent = new Intent(((GotCharacterViewHolder) holder).itemView.getContext(), DetailActivity.class);
-                intent.putExtra(Constants.DESCRIPTION, gcs.get(position).mDescription);
-                intent.putExtra(Constants.NAME, gcs.get(position).mName);
-                intent.putExtra(Constants.IMAGE_URL, gcs.get(position).mImageUrl);
+                intent.putExtra(Constants.DESCRIPTION, gcs.get(position).getDescription());
+                intent.putExtra(Constants.NAME, gcs.get(position).getName());
+                intent.putExtra(Constants.IMAGE_URL, gcs.get(position).getImageUrl());
                 ((GotCharacterViewHolder) holder).itemView.getContext().startActivity(intent);
             }
         });
@@ -93,13 +93,13 @@ public class GoTAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 public void run() {
                     URL url = null;
                     try {
-                        url = new URL(goTCharacter.mImageUrl);
+                        url = new URL(goTCharacter.getImageUrl());
                         final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                         a.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 mImageView.setImageBitmap(bmp);
-                                mLblName.setText(goTCharacter.mName);
+                                mLblName.setText(goTCharacter.getName());
                             }
                         });
                     } catch (IOException e) {

@@ -10,23 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
-import es.npatarino.android.gotchallenge.model.GoTCharacter;
+import es.npatarino.android.gotchallenge.networking.GoTChallengeAPI;
+import es.npatarino.android.gotchallenge.networking.NetworkRequest;
+import es.npatarino.android.gotchallenge.networking.RestAPI;
 import es.npatarino.android.gotchallenge.ui.adapter.GoTAdapter;
+import rx.Subscription;
 
 /**
  * Created by alejandro on 1/5/16.
@@ -59,43 +51,17 @@ public class GoTListFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mGoTAdapter);
 
-        new Thread(new Runnable() {
+        RestAPI mApi = GoTChallengeAPI.getApiInterface(getActivity());
 
-            @Override
-            public void run() {
-                String url = "http://52.18.228.107:3000/characters";
+        Subscription mGetCharactersSubscription = NetworkRequest.performAsyncRequest(mApi.getCharacters(), (data) -> {
+            mGoTAdapter.addAll(data);
+            mGoTAdapter.notifyDataSetChanged();
+            mProgress.hide();
 
-                URL obj = null;
-                try {
-                    obj = new URL(url);
-                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                    con.setRequestMethod("GET");
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
+        }, (error) -> {
+            Log.e(TAG, error.getLocalizedMessage());
+        });
 
-                    Type listType = new TypeToken<ArrayList<GoTCharacter>>() {
-                    }.getType();
-                    final List<GoTCharacter> characters = new Gson().fromJson(response.toString(), listType);
-                    GoTListFragment.this.getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mGoTAdapter.addAll(characters);
-                            mGoTAdapter.notifyDataSetChanged();
-                            mProgress.hide();
-                        }
-                    });
-                } catch (IOException e) {
-                    Log.e(TAG, e.getLocalizedMessage());
-                }
-
-
-            }
-        }).start();
         return mRootView;
     }
 }

@@ -20,14 +20,20 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.model.GoTHouse;
+import es.npatarino.android.gotchallenge.networking.GoTChallengeAPI;
+import es.npatarino.android.gotchallenge.networking.NetworkRequest;
+import es.npatarino.android.gotchallenge.networking.RestAPI;
 import es.npatarino.android.gotchallenge.ui.adapter.GoTHouseAdapter;
+import rx.Subscription;
 
 /**
  * Created by alejandro on 1/5/16.
@@ -35,6 +41,8 @@ import es.npatarino.android.gotchallenge.ui.adapter.GoTHouseAdapter;
 public class GoTHousesListFragment extends Fragment {
 
     private static final String TAG = "GoTHousesListFragment";
+
+    private Set mSet;
 
     @Bind(R.id.pb)
     ContentLoadingProgressBar mProgress;
@@ -53,64 +61,48 @@ public class GoTHousesListFragment extends Fragment {
 
         ButterKnife.bind(this, mRootView);
 
+        mSet = new HashSet();
+
         mGoTHouseAdapter = new GoTHouseAdapter(getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mGoTHouseAdapter);
 
-        new Thread(new Runnable() {
+        RestAPI mApi = GoTChallengeAPI.getApiInterface(getActivity());
 
-            @Override
-            public void run() {
-                String url = "http://52.18.228.107:3000/characters";
+        Subscription mGetCharactersSubscription = NetworkRequest.performAsyncRequest(mApi.getCharacters(), (data) -> {
+            List<GoTCharacter> mCharacters = data;
 
-                URL obj = null;
-                try {
-                    obj = new URL(url);
-                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                    con.setRequestMethod("GET");
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
-                    Type listType = new TypeToken<ArrayList<GoTCharacter>>() {
-                    }.getType();
-                    final List<GoTCharacter> characters = new Gson().fromJson(response.toString(), listType);
-                    GoTHousesListFragment.this.getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ArrayList<GoTHouse> hs = new ArrayList<GoTHouse>();
-                            for (int i = 0; i < characters.size(); i++) {
-                                boolean b = false;
-                                for (int j = 0; j < hs.size(); j++) {
-                                    if (hs.get(j).mHouseName.equalsIgnoreCase(characters.get(i).mHouseName)) {
-                                        b = true;
-                                    }
-                                }
-                                if (!b) {
-                                    if (characters.get(i).mHouseId != null && !characters.get(i).mHouseId.isEmpty()) {
-                                        GoTHouse h = new GoTHouse();
-                                        h.mHouseId = characters.get(i).mHouseId;
-                                        h.mHouseName = characters.get(i).mHouseName;
-                                        h.mHouseImageUrl = characters.get(i).mHouseImageUrl;
-                                        hs.add(h);
-                                        b = false;
-                                    }
-                                }
-                            }
-                            mGoTHouseAdapter.addAll(hs);
-                            mGoTHouseAdapter.notifyDataSetChanged();
-                            mProgress.hide();
-                        }
-                    });
-                } catch (IOException e) {
-                    Log.e(TAG, e.getLocalizedMessage());
+            ArrayList<GoTHouse> mHouses = new ArrayList<GoTHouse>();
+
+            for (GoTCharacter lCharacter : mCharacters) {
+                if(isNotDuplicated(lCharacter.getHouseName())){
+                    GoTHouse lHouse = new GoTHouse(lCharacter.getHouseImageUrl(), lCharacter.getHouseName(),
+                            lCharacter.getHouseId());
+                    mHouses.add(lHouse);
                 }
             }
-        }).start();
+
+            mGoTHouseAdapter.addAll(mHouses);
+            mGoTHouseAdapter.notifyDataSetChanged();
+            mProgress.hide();
+
+        }, (error) -> {
+            Log.e(TAG, error.getLocalizedMessage());
+        });
+
         return mRootView;
+    }
+
+    private boolean isNotDuplicated(String mHouseName) {
+
+        if (isNameEmpty(mHouseName)) return false;
+
+        //false = duplicated
+        return mSet.add(mHouseName);
+    }
+
+    private boolean isNameEmpty(String mHouseName) {
+        return mHouseName == "";
     }
 }

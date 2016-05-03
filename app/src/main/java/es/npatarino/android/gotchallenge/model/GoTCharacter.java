@@ -8,17 +8,17 @@ import com.google.gson.annotations.SerializedName;
 public class GoTCharacter {
 
     @SerializedName("name")
-    public String mName;
+    private String mName;
     @SerializedName("imageUrl")
-    public String mImageUrl;
+    private String mImageUrl;
     @SerializedName("description")
-    public String mDescription;
+    private String mDescription;
     @SerializedName("houseImageUrl")
-    public String mHouseImageUrl;
+    private String mHouseImageUrl;
     @SerializedName("houseName")
-    public String mHouseName;
+    private String mHouseName;
     @SerializedName("houseId")
-    public String mHouseId;
+    private String mHouseId;
 
     public String getHouseImageUrl() {
         return mHouseImageUrl;
