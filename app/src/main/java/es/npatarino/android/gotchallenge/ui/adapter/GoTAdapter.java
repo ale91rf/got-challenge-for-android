@@ -2,11 +2,8 @@ package es.npatarino.android.gotchallenge.ui.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +12,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -55,7 +50,7 @@ public class GoTAdapter extends RecyclerView.Adapter<GoTAdapter.GotCharacterView
     @Override
     public void onBindViewHolder(GotCharacterViewHolder aHolder, int aPosition) {
 
-        aHolder.render(mCharacterList.get(aPosition));
+        aHolder.render(mCharacterList.get(aPosition), mActivity);
         aHolder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,9 +86,9 @@ public class GoTAdapter extends RecyclerView.Adapter<GoTAdapter.GotCharacterView
 
         }
 
-        public void render(GoTCharacter aGoTCharacter) {
+        public void render(GoTCharacter aGoTCharacter, Activity aActivity) {
 
-            Picasso.with(mImageView.getContext()).load(aGoTCharacter.getImageUrl()).into(mImageView);
+            Picasso.with(aActivity).load(aGoTCharacter.getImageUrl()).into(mImageView);
             mLblName.setText(aGoTCharacter.getName());
 
         }

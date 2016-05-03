@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,69 +27,53 @@ import es.npatarino.android.gotchallenge.model.GoTHouse;
 /**
  * Created by alejandro on 1/5/16.
  */
-public class GoTHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GoTHouseAdapter extends RecyclerView.Adapter<GoTHouseAdapter.GotHouseViewHolder> {
 
-    private final List<GoTHouse> gcs;
-    private Activity a;
+    private List<GoTHouse> mHousesList;
+    private Activity mActivity;
 
-    public GoTHouseAdapter(Activity activity) {
-        this.gcs = new ArrayList<>();
-        a = activity;
+    public GoTHouseAdapter(Activity aActivity) {
+        this.mHousesList = new ArrayList<>();
+        mActivity = aActivity;
     }
 
     public void addAll(Collection<GoTHouse> collection) {
         for (int i = 0; i < collection.size(); i++) {
-            gcs.add((GoTHouse) collection.toArray()[i]);
+            mHousesList.add((GoTHouse) collection.toArray()[i]);
         }
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new GotCharacterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.got_house_row, parent, false));
+    public GotHouseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new GotHouseViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.got_house_row, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        GotCharacterViewHolder gotCharacterViewHolder = (GotCharacterViewHolder) holder;
-        gotCharacterViewHolder.render(gcs.get(position));
+    public void onBindViewHolder(GotHouseViewHolder aHolder, int aPosition) {
+        aHolder.render(mHousesList.get(aPosition), mActivity);
     }
 
     @Override
     public int getItemCount() {
-        return gcs.size();
+        return mHousesList.size();
     }
 
-    class GotCharacterViewHolder extends RecyclerView.ViewHolder {
+
+
+    class GotHouseViewHolder extends RecyclerView.ViewHolder {
 
         private static final String TAG = "GotCharacterViewHolder";
 
         @Nullable @Bind(R.id.ivBackground)
         ImageView mImageView;
 
-        public GotCharacterViewHolder(View aView) {
+        public GotHouseViewHolder(View aView) {
             super(aView);
             ButterKnife.bind(this, aView);
         }
 
-        public void render(final GoTHouse goTHouse) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    URL url = null;
-                    try {
-                        url = new URL(goTHouse.getHouseImageUrl());
-                        final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                        a.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mImageView.setImageBitmap(bmp);
-                            }
-                        });
-                    } catch (IOException e) {
-                        Log.e(TAG, e.getLocalizedMessage());
-                    }
-                }
-            }).start();
+        public void render(GoTHouse aGoTHouse, Activity aActivity) {
+            Picasso.with(aActivity).load(aGoTHouse.getHouseImageUrl()).into(mImageView);
         }
     }
 
