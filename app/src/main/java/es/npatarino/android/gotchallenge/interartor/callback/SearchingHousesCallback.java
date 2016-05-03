@@ -3,13 +3,14 @@ package es.npatarino.android.gotchallenge.interartor.callback;
 import java.util.List;
 
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
+import es.npatarino.android.gotchallenge.model.GoTHouse;
 
 /**
  * Created by alejandro on 3/5/16.
  */
-public interface DownloadDataCallback {
+public interface SearchingHousesCallback {
 
-    public void dataDownloaded(List<GoTCharacter> aCharacters);
+    public void dataFound(List<GoTHouse> aHouses);
 
-    public void dataNotDownloaded(String aText);
+    public void dataNotFound(String aText);
 }

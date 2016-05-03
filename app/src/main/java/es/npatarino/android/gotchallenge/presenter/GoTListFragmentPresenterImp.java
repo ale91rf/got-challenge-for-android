@@ -13,17 +13,17 @@ import es.npatarino.android.gotchallenge.ui.view.GotListView;
 public class GoTListFragmentPresenterImp implements GoTListFragmentPresenter, DownloadDataCallback{
 
     private GotListView mView;
-    private DownloadDataInteractor mInteractor;
+    private DownloadDataInteractor mDownloadInteractor;
 
     public GoTListFragmentPresenterImp(DownloadDataInteractor aInteractor, GotListView aView) {
         mView = aView;
-        mInteractor = aInteractor;
+        mDownloadInteractor = aInteractor;
     }
 
     @Override
     public void getDataFromApi() {
         mView.showProgressBar();
-        mInteractor.downloadData(this);
+        mDownloadInteractor.downloadData(this);
     }
 
     @Override
@@ -33,9 +33,9 @@ public class GoTListFragmentPresenterImp implements GoTListFragmentPresenter, Do
     }
 
     @Override
-    public void dataNotDownloaded(String mText) {
+    public void dataNotDownloaded(String aText) {
         mView.hideProgressBar();
-        mView.showMessage(mText);
+        mView.showMessage(aText);
     }
 
 }

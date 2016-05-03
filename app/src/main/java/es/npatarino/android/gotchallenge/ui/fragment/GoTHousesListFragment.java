@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -27,22 +28,25 @@ import java.util.Set;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
+import es.npatarino.android.gotchallenge.interartor.DownloadDataInteractor;
+import es.npatarino.android.gotchallenge.interartor.SearchingHousesInteractor;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.model.GoTHouse;
 import es.npatarino.android.gotchallenge.networking.GoTChallengeAPI;
 import es.npatarino.android.gotchallenge.networking.NetworkRequest;
 import es.npatarino.android.gotchallenge.networking.RestAPI;
+import es.npatarino.android.gotchallenge.presenter.GoTListHousesFragmentPresenterImp;
 import es.npatarino.android.gotchallenge.ui.adapter.GoTHouseAdapter;
+import es.npatarino.android.gotchallenge.ui.view.GoTHousesListView;
 import rx.Subscription;
 
 /**
  * Created by alejandro on 1/5/16.
  */
-public class GoTHousesListFragment extends Fragment {
+public class GoTHousesListFragment extends Fragment implements GoTHousesListView{
 
     private static final String TAG = "GoTHousesListFragment";
 
-    private Set mSet;
 
     @Bind(R.id.pb)
     ContentLoadingProgressBar mProgress;
@@ -51,6 +55,7 @@ public class GoTHousesListFragment extends Fragment {
     RecyclerView mRecyclerView;
 
     private GoTHouseAdapter mGoTHouseAdapter;
+    private GoTListHousesFragmentPresenterImp mPresenter;
 
     public GoTHousesListFragment() {
     }
@@ -60,49 +65,53 @@ public class GoTHousesListFragment extends Fragment {
         View mRootView = inflater.inflate(R.layout.fragment_list, container, false);
 
         ButterKnife.bind(this, mRootView);
-
-        mSet = new HashSet();
-
-        mGoTHouseAdapter = new GoTHouseAdapter(getActivity());
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mGoTHouseAdapter);
-
-        RestAPI mApi = GoTChallengeAPI.getApiInterface(getActivity());
-
-        Subscription mGetCharactersSubscription = NetworkRequest.performAsyncRequest(mApi.getCharacters(), (data) -> {
-            List<GoTCharacter> mCharacters = data;
-
-            ArrayList<GoTHouse> mHouses = new ArrayList<GoTHouse>();
-
-            for (GoTCharacter lCharacter : mCharacters) {
-                if(isNotDuplicated(lCharacter.getHouseName())){
-                    GoTHouse lHouse = new GoTHouse(lCharacter.getHouseImageUrl(), lCharacter.getHouseName(),
-                            lCharacter.getHouseId());
-                    mHouses.add(lHouse);
-                }
-            }
-
-            mGoTHouseAdapter.addAll(mHouses);
-            mGoTHouseAdapter.notifyDataSetChanged();
-            mProgress.hide();
-
-        }, (error) -> {
-            Log.e(TAG, error.getLocalizedMessage());
-        });
+        injectDependencies();
+        setupRecyclerView();
+        getData();
 
         return mRootView;
     }
 
-    private boolean isNotDuplicated(String mHouseName) {
-
-        if (isNameEmpty(mHouseName)) return false;
-
-        //false = duplicated
-        return mSet.add(mHouseName);
+    @Override
+    public void displayList(List<GoTHouse> aList) {
+        mGoTHouseAdapter.addAll(aList);
+        mGoTHouseAdapter.notifyDataSetChanged();
     }
 
-    private boolean isNameEmpty(String mHouseName) {
-        return mHouseName == "";
+    @Override
+    public void injectDependencies() {
+        RestAPI lApi = GoTChallengeAPI.getApiInterface(getActivity());
+        DownloadDataInteractor lDownloadInteractor = new DownloadDataInteractor(lApi);
+
+        mPresenter = new GoTListHousesFragmentPresenterImp(lDownloadInteractor, new SearchingHousesInteractor(), this);
+
+    }
+
+    @Override
+    public void showProgressBar() {
+        mProgress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        mProgress.hide();
+    }
+
+    @Override
+    public void setupRecyclerView() {
+        mGoTHouseAdapter = new GoTHouseAdapter(getActivity());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mGoTHouseAdapter);
+    }
+
+    @Override
+    public void showMessage(String aMessage) {
+        Toast.makeText(getActivity(), aMessage, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void getData() {
+        mPresenter.getDataFromApi();
     }
 }
