@@ -7,4 +7,7 @@ public interface GoTListHousesFragmentPresenter {
 
     public void getDataFromApi();
 
+    public void getDataFromDB();
+
+
 }

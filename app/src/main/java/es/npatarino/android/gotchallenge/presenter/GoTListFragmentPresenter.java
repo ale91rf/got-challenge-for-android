@@ -7,4 +7,6 @@ public interface GoTListFragmentPresenter {
 
     public void getDataFromApi();
 
+    public void getDataFromDB();
+
 }

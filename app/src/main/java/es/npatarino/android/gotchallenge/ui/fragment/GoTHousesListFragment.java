@@ -1,5 +1,8 @@
 package es.npatarino.android.gotchallenge.ui.fragment;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
@@ -82,8 +85,11 @@ public class GoTHousesListFragment extends Fragment implements GoTHousesListView
     public void injectDependencies() {
         RestAPI lApi = GoTChallengeAPI.getApiInterface(getActivity());
         DownloadDataInteractor lDownloadInteractor = new DownloadDataInteractor(lApi);
-
-        mPresenter = new GoTListHousesFragmentPresenterImp(lDownloadInteractor, new SearchingHousesInteractor(), this);
+        ConnectivityManager lConectivityManager = (ConnectivityManager)
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo lNetInfo = lConectivityManager.getActiveNetworkInfo();
+        mPresenter = new GoTListHousesFragmentPresenterImp(lDownloadInteractor, new SearchingHousesInteractor(),
+                this, lNetInfo);
 
     }
 

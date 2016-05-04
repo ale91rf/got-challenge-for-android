@@ -1,5 +1,8 @@
 package es.npatarino.android.gotchallenge.ui.fragment;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
@@ -62,7 +65,10 @@ public class GoTListFragment extends Fragment implements GotListView {
     public void injectDependencies() {
         RestAPI lApi = GoTChallengeAPI.getApiInterface(getActivity());
         DownloadDataInteractor lInteractor = new DownloadDataInteractor(lApi);
-        mPresenter = new GoTListFragmentPresenterImp(lInteractor, this);
+        ConnectivityManager lConectivityManager = (ConnectivityManager)
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo lNetInfo = lConectivityManager.getActiveNetworkInfo();
+        mPresenter = new GoTListFragmentPresenterImp(lInteractor, this, lNetInfo);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package es.npatarino.android.gotchallenge.presenter;
 
+import android.net.NetworkInfo;
+
 import java.util.List;
 
 import es.npatarino.android.gotchallenge.interartor.DownloadDataInteractor;
@@ -9,6 +11,7 @@ import es.npatarino.android.gotchallenge.interartor.callback.SearchingHousesCall
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.model.GoTHouse;
 import es.npatarino.android.gotchallenge.ui.view.GoTHousesListView;
+import es.npatarino.android.gotchallenge.util.Constants;
 
 /**
  * Created by alejandro on 3/5/16.
@@ -19,18 +22,30 @@ public class GoTListHousesFragmentPresenterImp implements GoTListHousesFragmentP
     private GoTHousesListView mView;
     private DownloadDataInteractor mDownloadInteractor;
     private SearchingHousesInteractor mSearchingInteractor;
+    private NetworkInfo mInfoRed;
 
     public GoTListHousesFragmentPresenterImp(DownloadDataInteractor aDownloadInteractor,
-                                             SearchingHousesInteractor aSearchingInteractor, GoTHousesListView aView) {
+                                             SearchingHousesInteractor aSearchingInteractor, GoTHousesListView aView,
+                                             NetworkInfo aInfoRed) {
         mView = aView;
         mDownloadInteractor = aDownloadInteractor;
         mSearchingInteractor = aSearchingInteractor;
+        mInfoRed = aInfoRed;
     }
 
     @Override
     public void getDataFromApi() {
-        mView.showProgressBar();
-        mDownloadInteractor.downloadData(this);
+        if (Constants.isConnectionAvailable(mInfoRed)){
+            mView.showProgressBar();
+            mDownloadInteractor.downloadData(this);
+        }else {
+            getDataFromDB();
+        }
+    }
+
+    @Override
+    public void getDataFromDB() {
+
     }
 
     @Override
