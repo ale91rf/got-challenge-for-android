@@ -2,23 +2,36 @@ package es.npatarino.android.gotchallenge.model;
 
 import com.google.gson.annotations.SerializedName;
 
+
 /**
  * Created by Nicolás Patarino on 21/02/16.
  */
-public class GoTCharacter {
+public class GoTCharacter{
 
     @SerializedName("name")
     private String mName;
+
     @SerializedName("imageUrl")
     private String mImageUrl;
     @SerializedName("description")
     private String mDescription;
     @SerializedName("houseImageUrl")
     private String mHouseImageUrl;
+
     @SerializedName("houseName")
     private String mHouseName;
     @SerializedName("houseId")
     private String mHouseId;
+
+    public GoTCharacter(String aName, String aImageUrl, String aDescription, String aHouseImageUrl,
+                        String aHouseName, String aHouseId) {
+        this.mName = aName;
+        this.mImageUrl = aImageUrl;
+        this.mDescription = aDescription;
+        this.mHouseImageUrl = aHouseImageUrl;
+        this.mHouseName = aHouseName;
+        this.mHouseId = aHouseId;
+    }
 
     public String getHouseImageUrl() {
         return mHouseImageUrl;

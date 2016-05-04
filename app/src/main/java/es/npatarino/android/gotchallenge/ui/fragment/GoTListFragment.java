@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +20,15 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
 import es.npatarino.android.gotchallenge.interartor.DownloadDataInteractor;
+import es.npatarino.android.gotchallenge.interartor.GetDataCharacterBDInteractor;
+import es.npatarino.android.gotchallenge.interartor.SetDataCharacterBDInteractor;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.networking.GoTChallengeAPI;
-import es.npatarino.android.gotchallenge.networking.NetworkRequest;
 import es.npatarino.android.gotchallenge.networking.RestAPI;
 import es.npatarino.android.gotchallenge.presenter.GoTListFragmentPresenterImp;
 import es.npatarino.android.gotchallenge.ui.adapter.GoTAdapter;
 import es.npatarino.android.gotchallenge.ui.view.GotListView;
-import rx.Subscription;
+import io.realm.Realm;
 
 /**
  * Created by alejandro on 1/5/16.
@@ -68,7 +68,9 @@ public class GoTListFragment extends Fragment implements GotListView {
         ConnectivityManager lConectivityManager = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo lNetInfo = lConectivityManager.getActiveNetworkInfo();
-        mPresenter = new GoTListFragmentPresenterImp(lInteractor, this, lNetInfo);
+        SetDataCharacterBDInteractor lSetDataInteractor = new SetDataCharacterBDInteractor(Realm.getDefaultInstance());
+        GetDataCharacterBDInteractor lGetDataInteractor = new GetDataCharacterBDInteractor(Realm.getDefaultInstance());
+        mPresenter = new GoTListFragmentPresenterImp(lInteractor, this, lNetInfo, lSetDataInteractor, lGetDataInteractor);
     }
 
     @Override
