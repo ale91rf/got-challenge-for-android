@@ -8,6 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,9 +18,11 @@ import java.net.URL;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
+import es.npatarino.android.gotchallenge.presenter.DetailActivityPresenterImp;
+import es.npatarino.android.gotchallenge.ui.view.DetailView;
 import es.npatarino.android.gotchallenge.util.Constants;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements DetailView{
 
 
     private static final String TAG = "DetailActivity";
@@ -34,44 +39,64 @@ public class DetailActivity extends AppCompatActivity {
     @Bind(R.id.t)
     Toolbar mToolbar;
 
+    private DetailActivityPresenterImp mPresenter;
+    private String mDescription;
+    private String mName;
+    private String mImageUrl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
         ButterKnife.bind(this);
+        injectDependencies();
+        mPresenter.getDataFromIntent();
+        setupToolbar();
 
 
-        final String mDescription = getIntent().getStringExtra(Constants.DESCRIPTION);
-        final String mName = getIntent().getStringExtra(Constants.NAME);
-        final String mImageUrl = getIntent().getStringExtra(Constants.IMAGE_URL);
 
+    }
+
+    @Override
+    public void setupToolbar() {
         mToolbar.setTitle(mName);
         setSupportActionBar(mToolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                URL url = null;
-                try {
-                    url = new URL(mImageUrl);
-                    final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    DetailActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mImage.setImageBitmap(bmp);
-                            mLblName.setText(mName);
-                            mLblDescription.setText(mDescription);
-                        }
-                    });
-                } catch (IOException e) {
-                    Log.e(TAG, e.getLocalizedMessage());
-                }
-            }
-        }).start();
+    @Override
+    public void injectDependencies() {
+        mPresenter = new DetailActivityPresenterImp(this);
+    }
+
+    @Override
+    public void getData() {
+        mDescription = getIntent().getStringExtra(Constants.DESCRIPTION);
+        mName = getIntent().getStringExtra(Constants.NAME);
+        mImageUrl = getIntent().getStringExtra(Constants.IMAGE_URL);
+
+        mPresenter.showData();
+    }
+
+    @Override
+    public void showData() {
+        Picasso.with(getApplicationContext()).load(mImageUrl).into(mImage);
+        mLblName.setText(mName);
+        mLblDescription.setText(mDescription);
+
+    }
+
+    @Override
+    public void doParallax() {
+
+    }
+
+    @Override
+    public void showMessage(String aMessage) {
+        Toast.makeText(getApplicationContext(), aMessage, Toast.LENGTH_LONG).show();
     }
 }
