@@ -32,7 +32,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
 import es.npatarino.android.gotchallenge.interartor.DownloadDataInteractor;
+import es.npatarino.android.gotchallenge.interartor.GetDataHouseBDInteractor;
 import es.npatarino.android.gotchallenge.interartor.SearchingHousesInteractor;
+import es.npatarino.android.gotchallenge.interartor.SetDataHouseBDInteractor;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.model.GoTHouse;
 import es.npatarino.android.gotchallenge.networking.GoTChallengeAPI;
@@ -41,6 +43,7 @@ import es.npatarino.android.gotchallenge.networking.RestAPI;
 import es.npatarino.android.gotchallenge.presenter.GoTListHousesFragmentPresenterImp;
 import es.npatarino.android.gotchallenge.ui.adapter.GoTHouseAdapter;
 import es.npatarino.android.gotchallenge.ui.view.GoTHousesListView;
+import io.realm.Realm;
 import rx.Subscription;
 
 /**
@@ -81,6 +84,11 @@ public class GoTHousesListFragment extends Fragment implements GoTHousesListView
         mGoTHouseAdapter.notifyDataSetChanged();
     }
 
+    /*
+    * D - Dependency inversion
+    * In the future we could do it with Dagger2
+    * TODO
+    */
     @Override
     public void injectDependencies() {
         RestAPI lApi = GoTChallengeAPI.getApiInterface(getActivity());
@@ -88,8 +96,11 @@ public class GoTHousesListFragment extends Fragment implements GoTHousesListView
         ConnectivityManager lConectivityManager = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo lNetInfo = lConectivityManager.getActiveNetworkInfo();
+        Realm lRealm = Realm.getDefaultInstance();
+        SetDataHouseBDInteractor lSetDataHouseBDInteractor = new SetDataHouseBDInteractor(lRealm);
+        GetDataHouseBDInteractor lGetDataHouseBDInteractor = new GetDataHouseBDInteractor(lRealm);
         mPresenter = new GoTListHousesFragmentPresenterImp(lDownloadInteractor, new SearchingHousesInteractor(),
-                this, lNetInfo);
+                this, lNetInfo, lSetDataHouseBDInteractor, lGetDataHouseBDInteractor);
 
     }
 

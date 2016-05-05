@@ -61,6 +61,11 @@ public class GoTListFragment extends Fragment implements GotListView {
         return mRootView;
     }
 
+    /*
+    * D - Dependency inversion
+    * In the future we could do it with Dagger2
+    * TODO
+    */
     @Override
     public void injectDependencies() {
         RestAPI lApi = GoTChallengeAPI.getApiInterface(getActivity());

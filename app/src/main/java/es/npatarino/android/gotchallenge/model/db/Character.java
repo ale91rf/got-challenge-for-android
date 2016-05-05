@@ -1,4 +1,4 @@
-package es.npatarino.android.gotchallenge.db;
+package es.npatarino.android.gotchallenge.model.db;
 
 
 

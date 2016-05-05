@@ -8,7 +8,7 @@ import es.npatarino.android.gotchallenge.interartor.DownloadDataInteractor;
 import es.npatarino.android.gotchallenge.interartor.GetDataCharacterBDInteractor;
 import es.npatarino.android.gotchallenge.interartor.callback.DownloadDataCallback;
 import es.npatarino.android.gotchallenge.interartor.SetDataCharacterBDInteractor;
-import es.npatarino.android.gotchallenge.interartor.callback.GetDataCallback;
+import es.npatarino.android.gotchallenge.interartor.callback.GetDataCharacterCallback;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.ui.view.GotListView;
 import es.npatarino.android.gotchallenge.util.Constants;
@@ -17,12 +17,12 @@ import es.npatarino.android.gotchallenge.util.Constants;
  * Created by alejandro on 3/5/16.
  */
 public class GoTListFragmentPresenterImp implements GoTListFragmentPresenter, DownloadDataCallback,
-        GetDataCallback{
+        GetDataCharacterCallback {
 
     private GotListView mView;
     private DownloadDataInteractor mDownloadInteractor;
     private NetworkInfo mInfoRed;
-    private SetDataCharacterBDInteractor mSetDataInteractor;
+    private SetDataCharacterBDInteractor mSetDataDBInteractor;
     private GetDataCharacterBDInteractor mGetDataBaseInteractor;
 
     public GoTListFragmentPresenterImp(DownloadDataInteractor aInteractor, GotListView aView,
@@ -31,7 +31,7 @@ public class GoTListFragmentPresenterImp implements GoTListFragmentPresenter, Do
         mView = aView;
         mDownloadInteractor = aInteractor;
         mInfoRed = aInfoRed;
-        mSetDataInteractor = aSetDataInteractor;
+        mSetDataDBInteractor = aSetDataInteractor;
         mGetDataBaseInteractor = aDataBaseInteractor;
     }
 
@@ -47,7 +47,7 @@ public class GoTListFragmentPresenterImp implements GoTListFragmentPresenter, Do
 
     @Override
     public void getDataFromDB() {
-        mGetDataBaseInteractor.getData(this);
+        mGetDataBaseInteractor.getCharacters(this);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class GoTListFragmentPresenterImp implements GoTListFragmentPresenter, Do
         mView.displayList(aCharacters);
 
         //store data locally as well.
-        mSetDataInteractor.setData(aCharacters);
+        mSetDataDBInteractor.setData(aCharacters);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class GoTListFragmentPresenterImp implements GoTListFragmentPresenter, Do
     }
 
     @Override
-    public void dataFromDB(List<GoTCharacter> aCharacters) {
+    public void charactersFromDB(List<GoTCharacter> aCharacters) {
         mView.hideProgressBar();
         mView.displayList(aCharacters);
     }

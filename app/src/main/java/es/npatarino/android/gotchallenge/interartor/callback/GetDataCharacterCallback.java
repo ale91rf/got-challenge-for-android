@@ -7,7 +7,7 @@ import es.npatarino.android.gotchallenge.model.GoTCharacter;
 /**
  * Created by alejandro on 4/5/16.
  */
-public interface GetDataCallback {
+public interface GetDataCharacterCallback {
 
-    public void dataFromDB(List<GoTCharacter> aCharacters);
+    public void charactersFromDB(List<GoTCharacter> aCharacters);
 }
