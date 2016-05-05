@@ -7,6 +7,7 @@ import es.npatarino.android.gotchallenge.interartor.callback.GetDataCharacterCal
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.model.db.Character;
 import es.npatarino.android.gotchallenge.model.db.Contract;
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.functions.Action1;
@@ -14,17 +15,18 @@ import rx.functions.Action1;
 /**
  * Created by alejandro on 5/5/16.
  */
-public class GetCharacterByFilterInteractor {
+public class GetDataCharacterByQueryInteractor {
 
     private Realm mRealm;
 
-    public GetCharacterByFilterInteractor(Realm aRealm){
+    public GetDataCharacterByQueryInteractor(Realm aRealm){
         mRealm = aRealm;
     }
 
-    public void getCharactersByFilter(GetDataCharacterCallback aCallback, String aId) {
+    public void getCharacterByQuery(GetDataCharacterCallback aCallback, String aQuery){
+
         mRealm.where(Character.class)
-                .equalTo("mHouseId", aId).findAllAsync().asObservable().subscribe(new Action1<RealmResults<Character>>() {
+                .contains("mName", aQuery, Case.INSENSITIVE).findAllAsync().asObservable().subscribe(new Action1<RealmResults<Character>>() {
             @Override
             public void call(RealmResults<Character> characters) {
                 List<GoTCharacter> lCharacterGoTList = new ArrayList<GoTCharacter>();
@@ -38,5 +40,4 @@ public class GetCharacterByFilterInteractor {
         });
 
     }
-
 }

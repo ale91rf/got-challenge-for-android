@@ -37,6 +37,7 @@ public class GoTAdapter extends RecyclerView.Adapter<GoTAdapter.GotCharacterView
     }
 
     public void addAll(Collection<GoTCharacter> collection) {
+        mCharacterList.clear();
         for (int i = 0; i < collection.size(); i++) {
             mCharacterList.add((GoTCharacter) collection.toArray()[i]);
         }

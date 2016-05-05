@@ -5,6 +5,7 @@ import java.util.List;
 
 import es.npatarino.android.gotchallenge.interartor.callback.GetDataHousesCallback;
 import es.npatarino.android.gotchallenge.model.GoTHouse;
+import es.npatarino.android.gotchallenge.model.db.Contract;
 import es.npatarino.android.gotchallenge.model.db.House;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -29,17 +30,13 @@ public class GetDataHouseBDInteractor {
                         List<GoTHouse> lHousesList = new ArrayList<GoTHouse>();
 
                         for (House lHouse: houses) {
-                            lHousesList.add(createGoTHouse(lHouse));
+                            lHousesList.add(Contract.createGoTHouse(lHouse));
                         }
 
                         aCallback.housesFromDB(lHousesList);
                     }
                 });
 
-    }
-
-    private GoTHouse createGoTHouse(House aHouse){
-        return new GoTHouse(aHouse.getmHouseImageUrl(), aHouse.getmHouseName(), aHouse.getmHouseId());
     }
 
 

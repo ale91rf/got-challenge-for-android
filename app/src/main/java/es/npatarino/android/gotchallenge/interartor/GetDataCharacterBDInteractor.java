@@ -6,6 +6,7 @@ import java.util.List;
 import es.npatarino.android.gotchallenge.model.db.Character;
 import es.npatarino.android.gotchallenge.interartor.callback.GetDataCharacterCallback;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
+import es.npatarino.android.gotchallenge.model.db.Contract;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.functions.Action1;
@@ -29,7 +30,7 @@ public class GetDataCharacterBDInteractor {
                         List<GoTCharacter> lCharacterGoTList = new ArrayList<GoTCharacter>();
 
                         for (Character lCharacter: characters){
-                            lCharacterGoTList.add(createGoTCharacter(lCharacter));
+                            lCharacterGoTList.add(Contract.createGoTCharacter(lCharacter));
                         }
 
                         aCallback.charactersFromDB(lCharacterGoTList);
@@ -38,8 +39,4 @@ public class GetDataCharacterBDInteractor {
 
     }
 
-    private GoTCharacter createGoTCharacter(Character aCharacter){
-        return new GoTCharacter(aCharacter.getmName(), aCharacter.getmImageUrl(), aCharacter.getmDescription(),
-                aCharacter.getmHouseImageUrl(), aCharacter.getmHouseName(), aCharacter.getmHouseId());
-    }
 }

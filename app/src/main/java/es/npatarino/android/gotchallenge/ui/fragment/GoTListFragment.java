@@ -8,7 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -21,6 +25,7 @@ import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
 import es.npatarino.android.gotchallenge.interartor.DownloadDataInteractor;
 import es.npatarino.android.gotchallenge.interartor.GetDataCharacterBDInteractor;
+import es.npatarino.android.gotchallenge.interartor.GetDataCharacterByQueryInteractor;
 import es.npatarino.android.gotchallenge.interartor.SetDataCharacterBDInteractor;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.networking.GoTChallengeAPI;
@@ -43,8 +48,11 @@ public class GoTListFragment extends Fragment implements GotListView {
     @Bind(R.id.rv)
     RecyclerView mRecyclerView;
 
+
     private GoTAdapter mGoTAdapter;
     private GoTListFragmentPresenterImp mPresenter;
+    private SearchView mSearchView;
+    private MenuItem mMenuItem;
 
     public GoTListFragment() {
     }
@@ -52,6 +60,8 @@ public class GoTListFragment extends Fragment implements GotListView {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         View mRootView = inflater.inflate(R.layout.fragment_list, container, false);
+
+        setHasOptionsMenu(true);
 
         ButterKnife.bind(this, mRootView);
         injectDependencies();
@@ -73,9 +83,12 @@ public class GoTListFragment extends Fragment implements GotListView {
         ConnectivityManager lConectivityManager = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo lNetInfo = lConectivityManager.getActiveNetworkInfo();
-        SetDataCharacterBDInteractor lSetDataInteractor = new SetDataCharacterBDInteractor(Realm.getDefaultInstance());
-        GetDataCharacterBDInteractor lGetDataInteractor = new GetDataCharacterBDInteractor(Realm.getDefaultInstance());
-        mPresenter = new GoTListFragmentPresenterImp(lInteractor, this, lNetInfo, lSetDataInteractor, lGetDataInteractor);
+        Realm lRealm = Realm.getDefaultInstance();
+        SetDataCharacterBDInteractor lSetDataInteractor = new SetDataCharacterBDInteractor(lRealm);
+        GetDataCharacterBDInteractor lGetDataInteractor = new GetDataCharacterBDInteractor(lRealm);
+        GetDataCharacterByQueryInteractor lGetDataByQueryInteractor = new GetDataCharacterByQueryInteractor(lRealm);
+        mPresenter = new GoTListFragmentPresenterImp(lInteractor, this, lNetInfo, lSetDataInteractor,
+                lGetDataInteractor, lGetDataByQueryInteractor);
     }
 
     @Override
@@ -110,5 +123,31 @@ public class GoTListFragment extends Fragment implements GotListView {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mGoTAdapter);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_list, menu);
+
+        mMenuItem = menu.findItem(R.id.action_search);
+
+        mSearchView = (SearchView) mMenuItem.getActionView();
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mPresenter.getCharactersByQuery(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mPresenter.getCharactersByQuery(newText);
+                return false;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
+
     }
 }

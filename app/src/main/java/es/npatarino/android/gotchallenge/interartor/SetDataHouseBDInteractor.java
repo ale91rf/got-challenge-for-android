@@ -2,7 +2,7 @@ package es.npatarino.android.gotchallenge.interartor;
 
 import java.util.List;
 
-import es.npatarino.android.gotchallenge.model.db.House;
+import es.npatarino.android.gotchallenge.model.db.Contract;
 import es.npatarino.android.gotchallenge.model.GoTHouse;
 import io.realm.Realm;
 
@@ -23,20 +23,11 @@ public class SetDataHouseBDInteractor {
             @Override
             public void execute(Realm realm) {
                 for (GoTHouse lHouse: aHouses) {
-                    realm.copyToRealmOrUpdate(createHouse(lHouse));
+                    realm.copyToRealmOrUpdate(Contract.createHouse(lHouse));
                 }
             }
         });
 
     }
 
-    private House createHouse(GoTHouse aHouse){
-        House lHouse = new House();
-
-        lHouse.setmHouseId(aHouse.getHouseId());
-        lHouse.setmHouseImageUrl(aHouse.getHouseImageUrl());
-        lHouse.setmHouseName(aHouse.getHouseName());
-
-        return lHouse;
-    }
 }

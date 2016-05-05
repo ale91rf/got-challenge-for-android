@@ -9,4 +9,6 @@ public interface GoTListFragmentPresenter {
 
     public void getDataFromDB();
 
+    public void getCharactersByQuery(String aQuery);
+
 }

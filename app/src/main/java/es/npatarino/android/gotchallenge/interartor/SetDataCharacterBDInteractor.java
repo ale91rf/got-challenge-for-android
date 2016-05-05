@@ -2,8 +2,8 @@ package es.npatarino.android.gotchallenge.interartor;
 
 import java.util.List;
 
-import es.npatarino.android.gotchallenge.model.db.Character;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
+import es.npatarino.android.gotchallenge.model.db.Contract;
 import io.realm.Realm;
 
 /**
@@ -22,22 +22,11 @@ public class SetDataCharacterBDInteractor {
             @Override
             public void execute(Realm realm) {
                 for (GoTCharacter lGoTCharacter: aCharacters){
-                    realm.copyToRealmOrUpdate(createCharacter(lGoTCharacter));
+                    realm.copyToRealmOrUpdate(Contract.createCharacter(lGoTCharacter));
                 }
             }
         });
         mRealm.close();
     }
 
-    private Character createCharacter(GoTCharacter aGoTCharacter){
-        Character lCharacter = new Character();
-        lCharacter.setmName(aGoTCharacter.getName());
-        lCharacter.setmImageUrl(aGoTCharacter.getImageUrl());
-        lCharacter.setmDescription(aGoTCharacter.getDescription());
-        lCharacter.setmHouseImageUrl(aGoTCharacter.getHouseImageUrl());
-        lCharacter.setmHouseName(aGoTCharacter.getHouseName());
-        lCharacter.setmHouseId(aGoTCharacter.getHouseId());
-
-        return lCharacter;
-    }
 }

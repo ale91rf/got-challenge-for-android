@@ -6,6 +6,7 @@ import java.util.List;
 
 import es.npatarino.android.gotchallenge.interartor.DownloadDataInteractor;
 import es.npatarino.android.gotchallenge.interartor.GetDataCharacterBDInteractor;
+import es.npatarino.android.gotchallenge.interartor.GetDataCharacterByQueryInteractor;
 import es.npatarino.android.gotchallenge.interartor.callback.DownloadDataCallback;
 import es.npatarino.android.gotchallenge.interartor.SetDataCharacterBDInteractor;
 import es.npatarino.android.gotchallenge.interartor.callback.GetDataCharacterCallback;
@@ -24,15 +25,18 @@ public class GoTListFragmentPresenterImp implements GoTListFragmentPresenter, Do
     private NetworkInfo mInfoRed;
     private SetDataCharacterBDInteractor mSetDataDBInteractor;
     private GetDataCharacterBDInteractor mGetDataBaseInteractor;
+    private GetDataCharacterByQueryInteractor mGetDataByQueryInteractor;
 
     public GoTListFragmentPresenterImp(DownloadDataInteractor aInteractor, GotListView aView,
                                        NetworkInfo aInfoRed, SetDataCharacterBDInteractor aSetDataInteractor,
-                                       GetDataCharacterBDInteractor aDataBaseInteractor) {
+                                       GetDataCharacterBDInteractor aDataBaseInteractor,
+                                       GetDataCharacterByQueryInteractor aGetDataByQueryInteractor) {
         mView = aView;
         mDownloadInteractor = aInteractor;
         mInfoRed = aInfoRed;
         mSetDataDBInteractor = aSetDataInteractor;
         mGetDataBaseInteractor = aDataBaseInteractor;
+        mGetDataByQueryInteractor = aGetDataByQueryInteractor;
     }
 
     @Override
@@ -48,6 +52,11 @@ public class GoTListFragmentPresenterImp implements GoTListFragmentPresenter, Do
     @Override
     public void getDataFromDB() {
         mGetDataBaseInteractor.getCharacters(this);
+    }
+
+    @Override
+    public void getCharactersByQuery(String aQuery) {
+        mGetDataByQueryInteractor.getCharacterByQuery(this, aQuery);
     }
 
     @Override
