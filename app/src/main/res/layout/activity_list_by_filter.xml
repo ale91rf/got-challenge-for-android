@@ -3,20 +3,30 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.activity.HousesListByFilterActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tHouseName"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+    </android.support.v7.widget.Toolbar>
+
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv"
+        android:id="@+id/rvCharactersList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/t"
-        tools:context=".ui.activity.HomeActivity"
+        android:layout_below="@id/tHouseName"
+        tools:context=".ui.activity.HousesListByFilterActivity"
         tools:showIn="@layout/fragment_list"
         />
 
     <android.support.v4.widget.ContentLoadingProgressBar
-        android:id="@+id/pb"
+        android:id="@+id/pbLoading"
         style="?android:attr/progressBarStyleLarge"
         android:visibility="invisible"
         android:layout_width="wrap_content"

@@ -3,7 +3,7 @@ package es.npatarino.android.gotchallenge.ui.view;
 /**
  * Created by alejandro on 4/5/16.
  */
-public interface DetailView {
+public interface DetailView extends GenericActivity{
 
     public void injectDependencies();
 
@@ -12,8 +12,6 @@ public interface DetailView {
     public void showData();
 
     public void doParallax();
-
-    public void setupToolbar();
 
     public void showMessage(String aMessage);
 

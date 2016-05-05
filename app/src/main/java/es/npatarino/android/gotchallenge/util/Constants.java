@@ -11,6 +11,8 @@ public class Constants {
     public static final String NAME = "name";
     public static final String IMAGE_URL = "imageUrl";
 
+    public static final String HOUSE_ID = "houseId";
+
     public static final String DB_NAME = "GoTDataBase";
 
     public static boolean isConnectionAvailable(NetworkInfo aInfoRed) {

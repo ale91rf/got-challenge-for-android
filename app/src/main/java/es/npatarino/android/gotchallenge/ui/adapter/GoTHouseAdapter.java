@@ -1,6 +1,7 @@
 package es.npatarino.android.gotchallenge.ui.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
@@ -23,6 +24,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import es.npatarino.android.gotchallenge.R;
 import es.npatarino.android.gotchallenge.model.GoTHouse;
+import es.npatarino.android.gotchallenge.ui.activity.HousesListByFilterActivity;
+import es.npatarino.android.gotchallenge.util.Constants;
 
 /**
  * Created by alejandro on 1/5/16.
@@ -51,6 +54,16 @@ public class GoTHouseAdapter extends RecyclerView.Adapter<GoTHouseAdapter.GotHou
     @Override
     public void onBindViewHolder(GotHouseViewHolder aHolder, int aPosition) {
         aHolder.render(mHousesList.get(aPosition), mActivity);
+        aHolder.mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent lIntent = new Intent(mActivity, HousesListByFilterActivity.class);
+                lIntent.putExtra(Constants.HOUSE_ID, mHousesList.get(aPosition).getHouseId());
+                lIntent.putExtra(Constants.NAME, mHousesList.get(aPosition).getHouseName());
+
+                mActivity.startActivity(lIntent);
+            }
+        });
     }
 
     @Override

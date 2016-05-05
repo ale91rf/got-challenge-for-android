@@ -17,6 +17,10 @@
             android:parentActivityName=".ui.activity.HomeActivity">
         </activity>
         <activity
+            android:name=".ui.activity.HousesListByFilterActivity"
+            android:parentActivityName=".ui.activity.HomeActivity">
+        </activity>
+        <activity
             android:name=".ui.activity.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme">
