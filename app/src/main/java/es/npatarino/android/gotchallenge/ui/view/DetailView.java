@@ -11,8 +11,6 @@ public interface DetailView extends GenericActivity{
 
     public void showData();
 
-    public void doParallax();
-
     public void showMessage(String aMessage);
 
 }

@@ -18,10 +18,6 @@ public class DetailActivityPresenterImp implements DetailActivityPresenter {
         mView.getData();
     }
 
-    @Override
-    public void parallax() {
-        mView.doParallax();
-    }
 
     @Override
     public void showData() {

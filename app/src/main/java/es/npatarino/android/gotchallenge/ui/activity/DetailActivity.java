@@ -29,16 +29,13 @@ public class DetailActivity extends AppCompatActivity implements DetailView{
 
     private static final String TAG = "DetailActivity";
 
-    @Bind(R.id.iv_photo)
+    @Bind(R.id.backdrop)
     ImageView mImage;
 
-    @Bind(R.id.tv_name)
-    TextView mLblName;
-
-    @Bind(R.id.tv_description)
+    @Bind(R.id.lblTexto)
     TextView mLblDescription;
 
-    @Bind(R.id.t)
+    @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
     private DetailActivityPresenterImp mPresenter;
@@ -98,15 +95,11 @@ public class DetailActivity extends AppCompatActivity implements DetailView{
     @Override
     public void showData() {
         Picasso.with(getApplicationContext()).load(mImageUrl).into(mImage);
-        mLblName.setText(mName);
+
         mLblDescription.setText(mDescription);
 
     }
 
-    @Override
-    public void doParallax() {
-
-    }
 
     @Override
     public void showMessage(String aMessage) {

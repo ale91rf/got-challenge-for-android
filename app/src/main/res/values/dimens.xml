@@ -9,4 +9,8 @@
     <dimen name="body_text_size">16sp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+
+    <dimen name="text_padding">20dp</dimen>
+    <dimen name="appbar_height">300dp</dimen>
+    <dimen name="collapsing_titleMarginStart">20sp</dimen>
 </resources>

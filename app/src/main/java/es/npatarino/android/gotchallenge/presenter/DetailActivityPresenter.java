@@ -7,7 +7,5 @@ public interface DetailActivityPresenter {
 
     public void getDataFromIntent();
 
-    public void parallax();
-
     public void showData();
 }
