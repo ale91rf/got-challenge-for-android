@@ -22,7 +22,10 @@ public class GoTChallengeAPI {
 
     public static RestAPI getApiInterface(Context aContext) {
 
-        if (mRestApi == null) createInstance(aContext);
+        if (mRestApi == null) {
+            createInstance(aContext);
+        }
+
         return mRestApi;
     }
 

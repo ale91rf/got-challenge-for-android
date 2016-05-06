@@ -58,6 +58,6 @@ public class SearchingHousesInteractor  {
     }
 
     private boolean isNameEmpty(String mHouseName) {
-        return mHouseName == "";
+        return mHouseName.isEmpty();
     }
 }
