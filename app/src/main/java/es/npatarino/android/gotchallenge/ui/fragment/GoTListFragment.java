@@ -72,9 +72,9 @@ public class GoTListFragment extends Fragment implements GotListView {
     }
 
     /*
-    * D - Dependency inversion
+    * DI - Dependency inversion
+    * dependency injection manually
     * In the future we could do it with Dagger2
-    * TODO
     */
     @Override
     public void injectDependencies() {

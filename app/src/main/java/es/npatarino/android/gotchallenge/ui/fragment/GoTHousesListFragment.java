@@ -85,9 +85,9 @@ public class GoTHousesListFragment extends Fragment implements GoTHousesListView
     }
 
     /*
-    * D - Dependency inversion
+    * DI - Dependency inversion
+    * dependency injection manually
     * In the future we could do it with Dagger2
-    * TODO
     */
     @Override
     public void injectDependencies() {
