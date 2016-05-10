@@ -9,7 +9,7 @@ import rx.Observable;
 /**
  * Created by alejandro on 2/5/16.
  */
-public interface RestAPI {
+public interface RestApi {
 
     String API_ENDPOINT = "http://52.18.228.107:3000/";
 

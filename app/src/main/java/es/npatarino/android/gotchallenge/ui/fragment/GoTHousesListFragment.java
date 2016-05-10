@@ -8,25 +8,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,16 +22,13 @@ import es.npatarino.android.gotchallenge.interartor.DownloadDataInteractor;
 import es.npatarino.android.gotchallenge.interartor.GetDataHouseBDInteractor;
 import es.npatarino.android.gotchallenge.interartor.SearchingHousesInteractor;
 import es.npatarino.android.gotchallenge.interartor.SetDataHouseBDInteractor;
-import es.npatarino.android.gotchallenge.model.GoTCharacter;
 import es.npatarino.android.gotchallenge.model.GoTHouse;
-import es.npatarino.android.gotchallenge.networking.GoTChallengeAPI;
-import es.npatarino.android.gotchallenge.networking.NetworkRequest;
-import es.npatarino.android.gotchallenge.networking.RestAPI;
+import es.npatarino.android.gotchallenge.networking.GoTChallengeApi;
+import es.npatarino.android.gotchallenge.networking.RestApi;
 import es.npatarino.android.gotchallenge.presenter.GoTListHousesFragmentPresenterImp;
 import es.npatarino.android.gotchallenge.ui.adapter.GoTHouseAdapter;
 import es.npatarino.android.gotchallenge.ui.view.GoTHousesListView;
 import io.realm.Realm;
-import rx.Subscription;
 
 /**
  * Created by alejandro on 1/5/16.
@@ -91,7 +75,7 @@ public class GoTHousesListFragment extends Fragment implements GoTHousesListView
     */
     @Override
     public void injectDependencies() {
-        RestAPI lApi = GoTChallengeAPI.getApiInterface(getActivity());
+        RestApi lApi = GoTChallengeApi.getApiInterface(getActivity());
         DownloadDataInteractor lDownloadInteractor = new DownloadDataInteractor(lApi);
         ConnectivityManager lConectivityManager = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);

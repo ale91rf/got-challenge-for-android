@@ -1,6 +1,5 @@
 package es.npatarino.android.gotchallenge.interartor;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -12,7 +11,7 @@ import java.util.List;
 import es.npatarino.android.gotchallenge.BaseTestCase;
 import es.npatarino.android.gotchallenge.interartor.callback.DownloadDataCallback;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
-import es.npatarino.android.gotchallenge.networking.RestAPI;
+import es.npatarino.android.gotchallenge.networking.RestApi;
 import rx.Observable;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -23,7 +22,7 @@ import static org.mockito.Mockito.*;
 public class DownloadDataInteractorTest extends BaseTestCase{
 
     @Mock
-    private RestAPI mApi;
+    private RestApi mApi;
 
     private DownloadDataInteractor mInteractor;
 

@@ -1,10 +1,8 @@
 package es.npatarino.android.gotchallenge.interartor;
 
-import android.util.Log;
-
 import es.npatarino.android.gotchallenge.interartor.callback.DownloadDataCallback;
 import es.npatarino.android.gotchallenge.networking.NetworkRequest;
-import es.npatarino.android.gotchallenge.networking.RestAPI;
+import es.npatarino.android.gotchallenge.networking.RestApi;
 import rx.Subscription;
 
 /**
@@ -12,11 +10,11 @@ import rx.Subscription;
  */
 public class DownloadDataInteractor {
 
-    private RestAPI mApi;
+    private RestApi mApi;
 
     private Subscription mGetDataSubscription;
 
-    public DownloadDataInteractor(RestAPI aApi) {
+    public DownloadDataInteractor(RestApi aApi) {
         mApi = aApi;
     }
 

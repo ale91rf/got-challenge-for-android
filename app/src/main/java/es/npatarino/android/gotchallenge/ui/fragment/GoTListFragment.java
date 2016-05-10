@@ -28,8 +28,8 @@ import es.npatarino.android.gotchallenge.interartor.GetDataCharacterBDInteractor
 import es.npatarino.android.gotchallenge.interartor.GetDataCharacterByQueryInteractor;
 import es.npatarino.android.gotchallenge.interartor.SetDataCharacterBDInteractor;
 import es.npatarino.android.gotchallenge.model.GoTCharacter;
-import es.npatarino.android.gotchallenge.networking.GoTChallengeAPI;
-import es.npatarino.android.gotchallenge.networking.RestAPI;
+import es.npatarino.android.gotchallenge.networking.GoTChallengeApi;
+import es.npatarino.android.gotchallenge.networking.RestApi;
 import es.npatarino.android.gotchallenge.presenter.GoTListFragmentPresenterImp;
 import es.npatarino.android.gotchallenge.ui.adapter.GoTAdapter;
 import es.npatarino.android.gotchallenge.ui.view.GotListView;
@@ -78,7 +78,7 @@ public class GoTListFragment extends Fragment implements GotListView {
     */
     @Override
     public void injectDependencies() {
-        RestAPI lApi = GoTChallengeAPI.getApiInterface(getActivity());
+        RestApi lApi = GoTChallengeApi.getApiInterface(getActivity());
         DownloadDataInteractor lInteractor = new DownloadDataInteractor(lApi);
         ConnectivityManager lConectivityManager = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);

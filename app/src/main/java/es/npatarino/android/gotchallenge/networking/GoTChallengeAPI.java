@@ -13,14 +13,14 @@ import retrofit2.RxJavaCallAdapterFactory;
 /**
  * Created by alejandro on 2/5/16.
  */
-public class GoTChallengeAPI {
+public class GoTChallengeApi {
 
-    private static RestAPI mRestApi;
+    private static RestApi mRestApi;
 
     //private constructor, so it can not be instantiated
-    private GoTChallengeAPI(){};
+    private GoTChallengeApi(){};
 
-    public static RestAPI getApiInterface(Context aContext) {
+    public static RestApi getApiInterface(Context aContext) {
 
         if (mRestApi == null) {
             createInstance(aContext);
@@ -30,14 +30,14 @@ public class GoTChallengeAPI {
     }
 
     private static void createInstance(Context aContext) {
-        synchronized (GoTChallengeAPI.class) {
+        synchronized (GoTChallengeApi.class) {
             if (mRestApi == null) {
                 mRestApi = buildApliClient(aContext);
             }
         }
     }
 
-    private static RestAPI buildApliClient(Context aContext) {
+    private static RestApi buildApliClient(Context aContext) {
 
         OkHttpClient.Builder lBuilder = new OkHttpClient.Builder();
         lBuilder.cache(createCache(aContext));
@@ -45,13 +45,13 @@ public class GoTChallengeAPI {
         OkHttpClient lClient = lBuilder.build();
 
         Retrofit lRetrofit = new Retrofit.Builder()
-                .baseUrl(RestAPI.API_ENDPOINT)
+                .baseUrl(RestApi.API_ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(lClient)
                 .build();
 
-        return lRetrofit.create(RestAPI.class);
+        return lRetrofit.create(RestApi.class);
 
     }
 
